@@ -1,45 +1,102 @@
-import Task from "@/pages/api/task";
-import request from "supertest";
+import taskResolvers from "@/graphql/resolvers/taskResolvers";
+import Task from "@/pages/api/task"; // Adjust the path if needed
 
-describe("GraphQL Task API", () => {
-  it("should add a task", async () => {
-    const mutation = `
-      mutation {
-        addTask(input: {
-          title: "Test Task",
-          description: "Test Description"
-        }) {
-          id
-          title
-          description
-        }
-      }
-    `;
+// Mocking Task model
+jest.mock("@/pages/api/task", () => {
+	const save = jest.fn();
+	const find = jest.fn();
+	const findByIdAndUpdate = jest.fn();
 
-    const res = await request(Task) // Use the Apollo Server Task directly
-      .post("/graphql")
-      .send({ query: mutation });
+	return {
+		__esModule: true,
+		default: Object.assign(
+			jest.fn(() => ({
+				save,
+			})),
+			{
+				find,
+				findByIdAndUpdate,
+			}
+		),
+	};
+});
 
-    // Assert that the response matches the expected values
-    expect(res.body.data.addTask.title).toBe("Test Task");
-    expect(res.body.data.addTask.description).toBe("Test Description");
-  });
+// Test suite
+describe("Task Resolvers", () => {
+	let mockTasks: any;
+	let mockUpdatedTask: any;
 
-  it("should update a task", async () => {
-    const mutation = `
-      mutation {
-        updateTask(id: "1", input: { title: "Updated Task", description: "Updated Description" }) {
-          id
-          title
-          description
-        }
-      }
-    `;
+	beforeEach(() => {
+		mockTasks = [
+			{ title: "Task 1", isDeleted: false },
+			{ title: "Task 2", isDeleted: false },
+		];
 
-    const res = await request(Task).post("/graphql").send({ query: mutation });
+		mockUpdatedTask = {
+			_id: "1",
+			title: "Updated Task Title",
+			isDeleted: false,
+		};
+	});
 
-    // Assert that the task was updated correctly
-    expect(res.body.data.updateTask.title).toBe("Updated Task");
-    expect(res.body.data.updateTask.description).toBe("Updated Description");
-  });
+	afterEach(() => {
+		jest.clearAllMocks(); // Clear mocks to avoid polluting other tests
+	});
+
+	it("should return all non-deleted tasks", async () => {
+		// Mock the find method to return mockTasks
+		(Task.find as jest.Mock).mockResolvedValue(mockTasks);
+
+		// Call the resolver method
+		const result = await taskResolvers.Query.getAllTasks();
+
+		// Assert that the Task.find method was called with the correct filter
+		expect(Task.find).toHaveBeenCalledWith({ isDeleted: false });
+		expect(result).toEqual(mockTasks); // The result should match the mocked tasks
+	});
+
+	it("should return all deleted tasks", async () => {
+		// Mock the find method to return mockTasks
+		(Task.find as jest.Mock).mockResolvedValue([
+			{ title: "Deleted Task", isDeleted: true },
+		]);
+
+		// Call the resolver method
+		const result = await taskResolvers.Query.getFinishedTasksLists();
+
+		// Assert that the Task.find method was called with the correct filter
+		expect(Task.find).toHaveBeenCalledWith({ isDeleted: true });
+		expect(result).toEqual([{ title: "Deleted Task", isDeleted: true }]);
+	});
+	it("should update and return the updated task", async () => {
+		// Mock the findByIdAndUpdate method to return the updated task
+		(Task.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedTask);
+
+		// Call the resolver method
+		const result = await taskResolvers.Mutation.updateTask(
+			{},
+			{ id: "1", input: { title: "Updated Title" } }
+		);
+
+		// Assert that findByIdAndUpdate was called with the correct parameters
+		expect(Task.findByIdAndUpdate).toHaveBeenCalledWith(
+			"1",
+			{ $set: { title: "Updated Title" } }, // Corrected: Use $set for the update
+			{ new: true }
+		);
+		expect(result).toEqual(mockUpdatedTask); // The result should be the updated task
+	});
+
+	it("should throw an error if task not found", async () => {
+		// Mock the findByIdAndUpdate method to return null
+		(Task.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
+
+		// Call the resolver method and expect it to throw an error
+		await expect(
+			taskResolvers.Mutation.updateTask(
+				{},
+				{ id: "123", input: { title: "Updated Title" } }
+			)
+		).rejects.toThrow("Task not found");
+	});
 });
