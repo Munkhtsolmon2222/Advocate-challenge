@@ -1,5 +1,5 @@
+import Task from "@/pages/api/task";
 import request from "supertest";
-import handler from "../src/server"; // Import the server handler exported from Apollo Server
 
 describe("GraphQL Task API", () => {
   it("should add a task", async () => {
@@ -16,7 +16,7 @@ describe("GraphQL Task API", () => {
       }
     `;
 
-    const res = await request(handler) // Use the Apollo Server handler directly
+    const res = await request(Task) // Use the Apollo Server Task directly
       .post("/graphql")
       .send({ query: mutation });
 
@@ -36,9 +36,7 @@ describe("GraphQL Task API", () => {
       }
     `;
 
-    const res = await request(handler)
-      .post("/graphql")
-      .send({ query: mutation });
+    const res = await request(Task).post("/graphql").send({ query: mutation });
 
     // Assert that the task was updated correctly
     expect(res.body.data.updateTask.title).toBe("Updated Task");
