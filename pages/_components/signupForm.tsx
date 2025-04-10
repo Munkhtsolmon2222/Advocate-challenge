@@ -17,7 +17,7 @@ export const SignupPage = () => {
       // Store the token in localStorage or a global state (e.g., Context)
       localStorage.setItem("authToken", data.signup.token);
       // Redirect user to home or dashboard page
-      window.location.href = "/"; // For example
+      window.location.href = "/auth/login"; // For example
     } catch (error: any) {
       console.error("Signup error:", error.message);
     }

@@ -6,6 +6,8 @@ export const ADD_TASK = gql`
       id
       title
       description
+      priority
+      taskName
     }
   }
 `;
@@ -16,6 +18,8 @@ export const UPDATE_TASK = gql`
       id
       title
       description
+      priority
+      taskName
     }
   }
 `;

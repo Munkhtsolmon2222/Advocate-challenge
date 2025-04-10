@@ -1,9 +1,11 @@
-import { User } from "@/pages/api/user";
+import User from "@/pages/api/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
-
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in the environment variables");
+}
 const userResolvers = {
   Mutation: {
     signup: async (

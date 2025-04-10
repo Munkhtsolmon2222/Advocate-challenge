@@ -9,11 +9,15 @@ export const typeDefs = gql`
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
+    priority: Int!
+    taskName: String!
   }
 
   input TaskInput {
     title: String!
     description: String
+    priority: Int!
+    taskName: String!
   }
 
   input TaskUpdateInput {
