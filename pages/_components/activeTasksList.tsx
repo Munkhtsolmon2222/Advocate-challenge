@@ -7,56 +7,51 @@ import { TaskUpdateDialog } from "./updateTask";
 const loggedInUserId = "your_logged_in_user_id_here";
 
 export const TaskList = () => {
-	const { data, loading, error } = useQuery(GET_ALL_TASKS);
+  const { data, loading, error } = useQuery(GET_ALL_TASKS);
 
-	if (loading) return <p className="animate-pulse">Loading tasks...</p>;
-	if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <p className="animate-pulse">Loading tasks...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-	return (
-		<div>
-			<h2 className="text-xl font-bold mb-4">Active Task List</h2>
-			{data.getAllTasks.length === 0 ? (
-				<p>No tasks found.</p>
-			) : (
-				<ul className="space-y-4">
-					{data.getAllTasks.map((task: any) => (
-						<li key={task._id} className="p-4 border rounded shadow">
-							<p>
-								<strong>Task:</strong> {task.taskName}
-							</p>
-							<p>
-								<strong>Description:</strong> {task.description}
-							</p>
-							<p>
-								<strong>Priority:</strong> {task.priority}
-							</p>
-							<p>
-								<strong>Tags:</strong> {task.tags.join(", ")}
-							</p>
-							<p>
-								<strong>Status:</strong>{" "}
-								{task.isFinished ? "✅ Done" : "❌ Not done"}
-							</p>
-							<p>
-								<strong>Owner ID:</strong> {task.userId}
-							</p>
+  return (
+    <div className="items-center">
+      <h2 className="text-xl font-bold mb-4">Active Task List</h2>
+      <div className="w-fit mx-auto">
+        {data.getAllTasks.length === 0 ? (
+          <p>No tasks found.</p>
+        ) : (
+          <ul className="space-y-4 items-center">
+            {data.getAllTasks.map((task: any) => (
+              <li key={task._id} className="p-4 border rounded shadow">
+                <p>
+                  <strong>Task:</strong> {task.taskName}
+                </p>
+                <p>
+                  <strong>Description:</strong> {task.description}
+                </p>
+                <p>
+                  <strong>Priority:</strong> {task.priority}
+                </p>
+                <p>
+                  <strong>Tags:</strong> {task.tags.join(", ")}
+                </p>
 
-							{/* Only show update button if the task belongs to the logged-in user */}
-							<div className="mt-2">
-								<TaskUpdateDialog
-									taskId={task.id}
-									userId={loggedInUserId}
-									currentTaskName={task.taskName}
-									currentDescription={task.description}
-									currentPriority={task.priority}
-									currentIsFinished={task.isFinished}
-									currentTags={task.tags}
-								/>
-							</div>
-						</li>
-					))}
-				</ul>
-			)}
-		</div>
-	);
+                {/* Only show update button if the task belongs to the logged-in user */}
+                <div className="mt-2">
+                  <TaskUpdateDialog
+                    taskId={task.id}
+                    userId={loggedInUserId}
+                    currentTaskName={task.taskName}
+                    currentDescription={task.description}
+                    currentPriority={task.priority}
+                    currentIsFinished={task.isFinished}
+                    currentTags={task.tags}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
 };

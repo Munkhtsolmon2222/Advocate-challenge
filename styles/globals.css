@@ -24,10 +24,21 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  padding-top: 2vw;
+  padding-left: 10vw;
+  padding-right: 10vw;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+.container-div {
+  display: flex;
+  justify-content: space-between;
+}
+li {
+  border: 10px;
+  border-color: white;
 }
