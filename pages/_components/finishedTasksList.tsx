@@ -1,25 +1,25 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_TASKS } from "@/graphql/resolvers/queries";
 import { TaskUpdateDialog } from "./updateTask";
+import { GET_FINISHED_TASKS } from "@/graphql/resolvers/queries";
 
 // Simulating logged-in userId (replace this with actual auth logic)
 const loggedInUserId = "your_logged_in_user_id_here";
 
-export const TaskList = () => {
-	const { data, loading, error } = useQuery(GET_ALL_TASKS);
+export const TaskListFinished = () => {
+	const { data, loading, error } = useQuery(GET_FINISHED_TASKS);
 
 	if (loading) return <p className="animate-pulse">Loading tasks...</p>;
 	if (error) return <p>Error: {error.message}</p>;
 
 	return (
 		<div>
-			<h2 className="text-xl font-bold mb-4">Active Task List</h2>
-			{data.getAllTasks.length === 0 ? (
+			<h2 className="text-xl font-bold mb-4">Finished Task List</h2>
+			{data.getFinishedTasksLists.length === 0 ? (
 				<p>No tasks found.</p>
 			) : (
 				<ul className="space-y-4">
-					{data.getAllTasks.map((task: any) => (
+					{data.getFinishedTasksLists.map((task: any) => (
 						<li key={task._id} className="p-4 border rounded shadow">
 							<p>
 								<strong>Task:</strong> {task.taskName}
