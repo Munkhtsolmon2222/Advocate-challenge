@@ -1,14 +1,14 @@
 import task from "@/pages/api/task";
 import taskResolvers from "@/graphql/resolvers/taskResolvers";
 
-jest.mock("@/pages/api/task"); // Mock the Task model
+jest.mock("@/pages/api/task");
 
 describe("addTask Mutation", () => {
 	let mockContext: any;
 
 	beforeEach(() => {
 		mockContext = {
-			userId: "user123", // Mock a logged-in user
+			userId: "user123",
 		};
 	});
 
@@ -17,7 +17,7 @@ describe("addTask Mutation", () => {
 	});
 
 	it("should throw an error if user is not authenticated", async () => {
-		mockContext.userId = null; // Simulate a user who is not authenticated
+		mockContext.userId = null;
 
 		const input = {
 			description: "Test task",
@@ -46,7 +46,7 @@ describe("addTask Mutation", () => {
 			isDeleted: false,
 		});
 
-		task.prototype.save = mockSave; // Mock the save method on the Task model
+		task.prototype.save = mockSave;
 
 		const result = await taskResolvers.Mutation.addTask(
 			null,
@@ -54,13 +54,13 @@ describe("addTask Mutation", () => {
 			mockContext
 		);
 
-		expect(mockSave).toHaveBeenCalledTimes(1); // Ensure save was called once
+		expect(mockSave).toHaveBeenCalledTimes(1);
 		expect(result).toEqual({
 			...input,
 			userId: mockContext.userId,
 			isFinished: false,
 			isDeleted: false,
-		}); // Check if the task is created with the correct properties
+		});
 	});
 
 	it("should handle missing tags (empty array)", async () => {
@@ -68,7 +68,7 @@ describe("addTask Mutation", () => {
 			description: "Test task",
 			priority: "High",
 			taskName: "Test Task Name",
-			tags: undefined, // Simulate missing tags
+			tags: undefined,
 		};
 
 		const mockSave = jest.fn().mockResolvedValueOnce({
@@ -79,7 +79,7 @@ describe("addTask Mutation", () => {
 			isDeleted: false,
 		});
 
-		task.prototype.save = mockSave; // Mock the save method
+		task.prototype.save = mockSave;
 
 		const result = await taskResolvers.Mutation.addTask(
 			null,
@@ -87,7 +87,7 @@ describe("addTask Mutation", () => {
 			mockContext
 		);
 
-		expect(result.tags).toEqual([]); // Ensure tags are defaulted to an empty array
+		expect(result.tags).toEqual([]);
 	});
 	it("should default isFinished and isDeleted to false", async () => {
 		const input = {
@@ -137,19 +137,18 @@ describe("addTask Mutation", () => {
 		const input = {
 			description: "Missing name",
 			priority: "Low",
-			// taskName is omitted
 		};
 
 		await expect(
 			taskResolvers.Mutation.addTask(null, { input }, mockContext)
-		).rejects.toThrow(); // or a custom message if you handle it
+		).rejects.toThrow();
 	});
 
 	it("should throw an error if taskName is an empty string", async () => {
 		const input = {
 			description: "Description",
 			priority: "High",
-			taskName: "", // Empty string
+			taskName: "",
 			tags: ["tag"],
 		};
 
@@ -163,7 +162,7 @@ describe("addTask Mutation", () => {
 			description: "Test",
 			priority: "Medium",
 			taskName: "Task",
-			tags: Array(15).fill("tag"), // Simulate too many tags
+			tags: Array(15).fill("tag"),
 		};
 
 		await expect(
