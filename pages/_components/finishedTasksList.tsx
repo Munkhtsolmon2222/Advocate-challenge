@@ -20,7 +20,10 @@ export const TaskListFinished = () => {
       ) : (
         <ul className="space-y-4">
           {data.getFinishedTasksLists.map((task: any) => (
-            <li key={task._id} className="p-4 border rounded shadow">
+            <li
+              key={task._id}
+              className="container-div2 p-4 border rounded shadow"
+            >
               <p>
                 <strong>Task:</strong> {task.taskName}
               </p>
