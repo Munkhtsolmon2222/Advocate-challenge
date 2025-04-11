@@ -12,7 +12,7 @@ export interface ITask extends Document {
 }
 
 const taskSchema = new mongoose.Schema({
-	taskName: { type: String, required: true }, // Keep 'taskName' for internal or display purposes
+	taskName: { type: String, required: true },
 	description: { type: String, required: true },
 	isFinished: { type: Boolean, default: false },
 	isDeleted: { type: Boolean, default: false },

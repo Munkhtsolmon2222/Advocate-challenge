@@ -12,7 +12,7 @@ export const TaskListFinished = () => {
 	if (error) return <p>Error: {error.message}</p>;
 
 	return (
-		<div>
+		<div className="">
 			<h2 className="text-xl font-bold mb-4">Finished Task List</h2>
 			{data.getFinishedTasksLists.length === 0 ? (
 				<p>No tasks found.</p>

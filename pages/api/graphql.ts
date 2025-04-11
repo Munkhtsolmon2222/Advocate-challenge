@@ -10,22 +10,22 @@ import { authContext } from "@/graphql/auth/context";
 connectMongoose();
 
 const server = new ApolloServer({
-  schema: buildSubgraphSchema({
-    typeDefs,
-    resolvers: resolvers as unknown as GraphQLResolverMap<unknown>,
-  }),
-  introspection: true,
-  csrfPrevention: true,
-  cache: new InMemoryLRUCache(),
-  context: ({ req, res }: { req: Request; res: Response }) => {
-    const userContext = authContext({ req }); // Extract userId from the JWT
-    return {
-      ...userContext, // Add userId to the context
-      headers: req.headers,
-      req,
-      res,
-    };
-  },
+	schema: buildSubgraphSchema({
+		typeDefs,
+		resolvers: resolvers as unknown as GraphQLResolverMap<unknown>,
+	}),
+	introspection: true,
+	csrfPrevention: true,
+	cache: new InMemoryLRUCache(),
+	context: ({ req, res }: { req: Request; res: Response }) => {
+		const userContext = authContext({ req });
+		return {
+			...userContext,
+			headers: req.headers,
+			req,
+			res,
+		};
+	},
 });
 
 export const config = { api: { bodyParser: false, externalResolver: true } };

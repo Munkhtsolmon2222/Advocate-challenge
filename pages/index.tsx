@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Home() {
 	return (
-		<div>
+		<div className="rel-div">
 			<div className="container-div">
 				<h1>Task Management</h1>
 				<div className="container-div">

@@ -93,7 +93,7 @@ export const TaskUpdateDialog = ({
 			</button>
 
 			{open && (
-				<div className=" fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+				<div className=" inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 abs-div">
 					<div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
 						<div className="container-div1 flex justify-between items-center mb-4">
 							<h2 className="text-xl font-semibold">Update Task</h2>
