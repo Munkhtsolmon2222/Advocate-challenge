@@ -2,7 +2,7 @@ import User from "@/pages/api/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fake-jwt-secret"; // Fallback for tests
+const JWT_SECRET = process.env.JWT_SECRET || "fake-jwt-secret";
 if (!JWT_SECRET && process.env.NODE_ENV !== "test") {
   throw new Error("JWT_SECRET is not defined in the environment variables");
 }

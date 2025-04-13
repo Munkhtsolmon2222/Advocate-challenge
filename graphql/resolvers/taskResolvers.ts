@@ -23,7 +23,6 @@ const taskResolvers = {
         throw new Error("Not authenticated");
       }
 
-      // Validate required fields
       if (!input.taskName?.trim()) {
         throw new Error("taskName is required");
       }
